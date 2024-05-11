@@ -12,16 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:path_provider/path_provider.dart';
-
 import 'package:wallpaper_handler/wallpaper_handler.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('getPlatformVersion test', (WidgetTester tester) async {
-    final String? version =
-        await WallpaperHandler.instance.getPlatformVersion();
+    final String? version = await WallpaperHandler.instance.getPlatformVersion();
     // The version string depends on the host platform running the test, so
     // just assert that some non-empty string is returned.
     expect(version?.isNotEmpty, true);
@@ -31,35 +28,28 @@ void main() {
     // Arrange
     final filePath = File('assets/test.jpg');
     const wallpaperLocation = WallpaperLocation.homeScreen;
-    final bool isWallpaperSetSuccessfully = await WallpaperHandler.instance
-        .setWallpaperFromFile(filePath.path, wallpaperLocation);
+    final bool isWallpaperSetSuccessfully =
+        await WallpaperHandler.instance.setWallpaperFromFile(filePath.path, wallpaperLocation);
 
     expect(isWallpaperSetSuccessfully, true);
   });
 
   testWidgets('setWallpaperFromAsset test', (WidgetTester tester) async {
-    final Directory? downloadsDir = await getExternalStorageDirectory();
-
     // Arrange
     const assetPath = 'assets/images/test.jpg';
     const wallpaperLocation = WallpaperLocation.homeScreen;
-    final bool isWallpaperSetSuccessfully = await WallpaperHandler.instance
-        .setWallpaperFromAsset(assetPath, wallpaperLocation);
+    final bool isWallpaperSetSuccessfully = await WallpaperHandler.instance.setWallpaperFromAsset(assetPath, wallpaperLocation);
 
     expect(isWallpaperSetSuccessfully, true);
   });
 
-  testWidgets('setWallpaperFromAssetWithCrop test',
-      (WidgetTester tester) async {
-    final Directory? downloadsDir = await getExternalStorageDirectory();
-
+  testWidgets('setWallpaperFromAsset With Crop test', (WidgetTester tester) async {
     // Arrange
     const assetPath = 'assets/images/test.jpg';
     const wallpaperLocation = WallpaperLocation.homeScreen;
     const cropBounds = Rect.fromLTRB(0, 0, 2000, 3000);
-    final bool isWallpaperSetSuccessfully = await WallpaperHandler.instance
-        .setWallpaperFromAssetWithCrop(
-            assetPath, wallpaperLocation, cropBounds);
+    final bool isWallpaperSetSuccessfully =
+        await WallpaperHandler.instance.setWallpaperFromAsset(assetPath, wallpaperLocation, cropBounds: cropBounds);
 
     expect(isWallpaperSetSuccessfully, true);
   });

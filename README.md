@@ -1,6 +1,6 @@
 # wallpaper_handler
 
-Flutter package for easy wallpaper customization on Android devices – change Home Screen, Lock Screen, or both with simplicity.
+A Flutter package for easy wallpaper customization on Android devices – get wallpaper, change Home Screen, Lock Screen, or both with simplicity.
 
 ## Usage
 
@@ -10,7 +10,7 @@ Add the following dependency to your Flutter project's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  wallpaper_handler: ^0.0.1
+  wallpaper_handler: ^0.0.2
 ```
 
 Include the following import statement in your Dart library:
@@ -34,12 +34,32 @@ enum WallpaperLocation {
 }
 ```
 
-### Example
+### Examples
 
-#### Basic Usage
+#### Setting Wallpaper from File
 ```dart
-String path = "/path/to/file/on/disk";
-final bool result = await WallpaperManager.setWallpaperFromFile(path, WallpaperManager.HOME_SCREEN);
+const filePath = "/path/to/file/on/disk";
+const wallpaperLocation = WallpaperLocation.homeScreen;
+
+// Without crop bounds
+bool result = await WallpaperHandler.instance.setWallpaperFromFile(path, location);
+
+// With crop bounds
+const cropBounds = Rect.fromLTRB(100, 100, 200, 100);
+bool result = await WallpaperHandler.instance.setWallpaperFromFile(path, location, cropBounds: cropBounds);
+```
+
+#### Setting Wallpaper from Asset
+```dart
+const assetPath = 'assets/images/test.jpg';
+const wallpaperLocation = WallpaperLocation.homeScreen;
+
+// Without crop bounds
+bool result = await WallpaperHandler.instance.setWallpaperFromAsset(path, location);
+
+// With crop bounds
+const cropBounds = Rect.fromLTRB(100, 100, 200, 100);
+bool result = await WallpaperHandler.instance.setWallpaperFromAsset(path, location, cropBounds: cropBounds);
 ```
 
 #### Loading from a URL (with CacheManager, the image is saved to app files as well)
@@ -53,10 +73,26 @@ And in dart code
 ```dart
 String url = "";
 var file = await DefaultCacheManager().getSingleFile(url);
-final bool result = await WallpaperManager.setWallpaperFromFile(file.path, location);
+bool result = await WallpaperHandler.instance.setWallpaperFromFile(file.path, location);
 ```
 
-## Usage
+#### Retrieving Current Wallpaper
+To get the device wallpaper, you need to add the following permission to your app's `AndroidManifest.xml` file:
+
+```xml
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+```
+
+You also need to request the permission at runtime before using the plugin.
+
+The `getWallpaper` method retrieves the device wallpaper but it only allows specifying `homeScreen` or `lockScreen` as the wallpaper location. This method returns a `Uint8List?` representing the phone's wallpaper.
+
+```dart
+Uint8List? result = await WallpaperHandler.instance.getWallpaper(WallpaperLocation.homeScreen);
+```
+
+Make sure to handle the result appropriately, as it may be null if no wallpaper is set or if there are errors during retrieval.
 
 ## Contributor's Guidelines:
 Welcome contributions! Please create pull requests on the 'develop' branch. Thanks!

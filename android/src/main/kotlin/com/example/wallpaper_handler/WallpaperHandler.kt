@@ -1,19 +1,20 @@
 package com.example.wallpaper_handler
 
-import android.R
-import android.R.attr.bitmap
+import android.annotation.SuppressLint
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
+import android.os.ParcelFileDescriptor
 import io.flutter.FlutterInjector
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
 
@@ -28,20 +29,15 @@ class WallpaperHandler(var context: Context) : MethodCallHandler {
                 call.arguments as HashMap<String, Any?>,
                 result
             )
-
-            "setWallpaperFromFileWithCrop" -> setWallpaperFromFile(
-                call.arguments as HashMap<String, Any?>,
-                result
-            )
-
             "setWallpaperFromAsset" -> setWallpaperFromAsset(
                 call.arguments as HashMap<String, Any?>,
                 result
             )
-            "setWallpaperFromAssetWithCrop" -> setWallpaperFromAsset(
-                call.arguments as HashMap<String, Any?>,
+            "getWallpaper" -> getWallpaper(
+                call.arguments as Int,
                 result
             )
+
             else -> result.notImplemented()
         }
     }
@@ -97,7 +93,6 @@ class WallpaperHandler(var context: Context) : MethodCallHandler {
             e.printStackTrace()
             result.success(false)
         }
-
     }
 
     @Throws(IOException::class)
@@ -108,5 +103,26 @@ class WallpaperHandler(var context: Context) : MethodCallHandler {
         val assetFileDescriptor: AssetFileDescriptor = assetManager.openFd(assetLookupKey)
         val inputStream: InputStream = assetFileDescriptor.createInputStream()
         wm.setStream(inputStream)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getWallpaper(
+        wallpaperLocation: Int,
+        result: MethodChannel.Result
+    ) {
+        val wallpaperManager: WallpaperManager = WallpaperManager.getInstance(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val wallpaper = wallpaperManager.getWallpaperFile(wallpaperLocation)
+            if (wallpaper != null) {
+                result.success(ParcelFileDescriptor.AutoCloseInputStream(wallpaper).readBytes())
+                return
+            }
+        }
+        val d = wallpaperManager.drawable
+        val bitmap = (d as BitmapDrawable).bitmap
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        val bitmapData: ByteArray = stream.toByteArray()
+        result.success(bitmapData)
     }
 }

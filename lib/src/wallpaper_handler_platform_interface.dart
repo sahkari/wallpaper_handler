@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/animation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -30,26 +32,21 @@ abstract class WallpaperHandlerPlatform extends PlatformInterface {
   }
 
   Future<bool> setWallpaperFromFile(
-      String filePath, WallpaperLocation wallpaperLocation) async {
+      String filePath, WallpaperLocation wallpaperLocation,
+      {Rect? cropBounds}) async {
     throw UnimplementedError(
-        'setWallpaperFromFile() has not been implemented.');
-  }
-
-  Future<bool> setWallpaperFromFileWithCrop(String filePath,
-      WallpaperLocation wallpaperLocation, Rect cropBounds) async {
-    throw UnimplementedError(
-        'setWallpaperFromFileWithCrop() has not been implemented.');
+        'setWallpaperFromFile(String filePath, WallpaperLocation wallpaperLocation, {Rect? cropBounds}) has not been implemented.');
   }
 
   Future<bool> setWallpaperFromAsset(
-      String assetPath, WallpaperLocation wallpaperLocation) async {
+      String assetPath, WallpaperLocation wallpaperLocation,
+      {Rect? cropBounds}) async {
     throw UnimplementedError(
-        'setWallpaperFromAsset() has not been implemented.');
+        'setWallpaperFromAsset(String assetPath, WallpaperLocation wallpaperLocation, {Rect? cropBounds}) has not been implemented.');
   }
 
-  Future<bool> setWallpaperFromAssetWithCrop(String assetPath,
-      WallpaperLocation wallpaperLocation, Rect cropBounds) async {
+  Future<Uint8List?> getWallpaper(WallpaperLocation wallpaperLocation) async {
     throw UnimplementedError(
-        'setWallpaperFromFileWithCrop() has not been implemented.');
+        'getWallpaper(WallpaperLocation wallpaperLocation) has not been implemented.');
   }
 }
