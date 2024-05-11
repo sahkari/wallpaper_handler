@@ -75,13 +75,15 @@ class _MyAppState extends State<MyApp> {
     if (image != null) {
       _imageBytes = null;
       const wallpaperLocation = WallpaperLocation.homeScreen;
-      final bool isWallpaperSetSuccessfully = await WallpaperHandler.instance.setWallpaperFromFile(
+      final bool isWallpaperSetSuccessfully =
+          await WallpaperHandler.instance.setWallpaperFromFile(
         image.path,
         wallpaperLocation,
       );
       if (isWallpaperSetSuccessfully) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wallpaper set successfully.')));
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Wallpaper set successfully.')));
         }
       }
       setState(() {
@@ -100,7 +102,8 @@ class _MyAppState extends State<MyApp> {
         _isGetLoading = true;
       });
       const wallpaperLocation = WallpaperLocation.homeScreen;
-      _imageBytes = await WallpaperHandler.instance.getWallpaper(wallpaperLocation);
+      _imageBytes =
+          await WallpaperHandler.instance.getWallpaper(wallpaperLocation);
 
       setState(() {
         _isGetLoading = false;

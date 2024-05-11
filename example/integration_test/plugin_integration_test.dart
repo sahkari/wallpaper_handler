@@ -18,7 +18,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('getPlatformVersion test', (WidgetTester tester) async {
-    final String? version = await WallpaperHandler.instance.getPlatformVersion();
+    final String? version =
+        await WallpaperHandler.instance.getPlatformVersion();
     // The version string depends on the host platform running the test, so
     // just assert that some non-empty string is returned.
     expect(version?.isNotEmpty, true);
@@ -28,8 +29,8 @@ void main() {
     // Arrange
     final filePath = File('assets/test.jpg');
     const wallpaperLocation = WallpaperLocation.homeScreen;
-    final bool isWallpaperSetSuccessfully =
-        await WallpaperHandler.instance.setWallpaperFromFile(filePath.path, wallpaperLocation);
+    final bool isWallpaperSetSuccessfully = await WallpaperHandler.instance
+        .setWallpaperFromFile(filePath.path, wallpaperLocation);
 
     expect(isWallpaperSetSuccessfully, true);
   });
@@ -38,18 +39,21 @@ void main() {
     // Arrange
     const assetPath = 'assets/images/test.jpg';
     const wallpaperLocation = WallpaperLocation.homeScreen;
-    final bool isWallpaperSetSuccessfully = await WallpaperHandler.instance.setWallpaperFromAsset(assetPath, wallpaperLocation);
+    final bool isWallpaperSetSuccessfully = await WallpaperHandler.instance
+        .setWallpaperFromAsset(assetPath, wallpaperLocation);
 
     expect(isWallpaperSetSuccessfully, true);
   });
 
-  testWidgets('setWallpaperFromAsset With Crop test', (WidgetTester tester) async {
+  testWidgets('setWallpaperFromAsset With Crop test',
+      (WidgetTester tester) async {
     // Arrange
     const assetPath = 'assets/images/test.jpg';
     const wallpaperLocation = WallpaperLocation.homeScreen;
     const cropBounds = Rect.fromLTRB(0, 0, 2000, 3000);
-    final bool isWallpaperSetSuccessfully =
-        await WallpaperHandler.instance.setWallpaperFromAsset(assetPath, wallpaperLocation, cropBounds: cropBounds);
+    final bool isWallpaperSetSuccessfully = await WallpaperHandler.instance
+        .setWallpaperFromAsset(assetPath, wallpaperLocation,
+            cropBounds: cropBounds);
 
     expect(isWallpaperSetSuccessfully, true);
   });

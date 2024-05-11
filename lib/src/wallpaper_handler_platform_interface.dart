@@ -34,7 +34,6 @@ abstract class WallpaperHandlerPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-
   /// Sets wallpaper from a file with optional crop bounds.
   ///
   /// [filePath]: The file path of the wallpaper image.
