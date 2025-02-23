@@ -2,7 +2,7 @@ group 'com.example.wallpaper_handler'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '2.1.10'
     repositories {
         google()
         mavenCentral()
@@ -25,19 +25,19 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 33
+    compileSdk 35
     if (project.android.hasProperty("namespace")) {
         namespace 'com.example.wallpaper_handler'
     }
 
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 
     sourceSets {
@@ -47,6 +47,7 @@ android {
 
     defaultConfig {
         minSdkVersion 19
+        targetSdkVersion 35
     }
 
     dependencies {
