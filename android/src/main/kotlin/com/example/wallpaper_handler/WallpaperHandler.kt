@@ -14,12 +14,18 @@ import io.flutter.FlutterInjector
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
 
 
 class WallpaperHandler(var context: Context) : MethodCallHandler {
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     @Suppress("UNCHECKED_CAST")
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -54,14 +60,22 @@ class WallpaperHandler(var context: Context) : MethodCallHandler {
             val wallpaperLocation = map["wallpaperLocation"] as Int
 
             val bitmap = BitmapFactory.decodeFile(filePath)
-            val wm =
-                WallpaperManager.getInstance(context)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                wm.setBitmap(bitmap, cropBounds, false, wallpaperLocation)
-            } else {
-                wm.setBitmap(bitmap)
+            // 使用自定义 coroutineScope
+            coroutineScope.launch {
+                try {
+                    withContext(Dispatchers.IO) {
+                        val wm = WallpaperManager.getInstance(context)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            wm.setBitmap(bitmap, cropBounds, false, wallpaperLocation)
+                        } else {
+                            wm.setBitmap(bitmap)
+                        }
+                    }
+                    result.success(true)
+                } catch (e: Exception) {
+                    result.error("WALLPAPER_ERROR", e.message, null)
+                }
             }
-            result.success(true)
         } catch (e: IOException) {
             e.printStackTrace()
             result.success(false)
